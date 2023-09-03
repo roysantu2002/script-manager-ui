@@ -2,6 +2,7 @@
   {
     "id": 1,
     "title": "History",
+    "name": "History",
     "description": "Review the scripts logs / history.",
 
     "icon": "FaHistory"
@@ -9,6 +10,7 @@
   {
     "id": 2,
     "title": "Run All",
+    "name": "RunAll",
     "description": "Execute all the scripts.",
 
     "icon": "FaPlayCircle"
@@ -16,6 +18,7 @@
   {
     "id": 3,
     "title": "Scripts",
+    "name": "Scripts",
     "description": "Run individual scripts.",
 
     "icon": "FaCode"
@@ -23,6 +26,7 @@
   {
     "id": 4,
     "title": "Report",
+    "name": "Report",
     "description": "View the reports.",
 
     "icon": "FaFileAlt"
@@ -30,6 +34,7 @@
   {
     "id": 5,
     "title": "Audit",
+    "name": "Audit",
     "description": "Perform Audit.",
 
     "icon": "FaSearch"
@@ -37,6 +42,7 @@
   {
     "id": 6,
     "title": "Hosts",
+    "name": "Hosts",
     "description": "Manage Hosts.",
 
     "icon": "FaServer"

@@ -2,6 +2,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import data from "../../src/components/data/features.json";
+import RunAll from "../../src/components/features/RunAll";
 
 const CardDetailPage = () => {
   const router = useRouter();
@@ -19,9 +20,10 @@ const CardDetailPage = () => {
       {card ? (
         <>
           <h1>Card Details</h1>
-          {card.title}
+          {card.name}
+          {card.name === "RunAll" && <RunAll data={card} />}
           {/* Render the appropriate card component based on card name */}
-          {/* {card.name === 'CardType1' && <CardComponent1 data={card} />}
+          {/* {card.name === 'Runall' && <RunAll data={card} />}
           {card.name === 'CardType2' && <CardComponent2 data={card} />} */}
           {/* Add cases for other card types */}
         </>

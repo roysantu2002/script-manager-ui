@@ -5,7 +5,7 @@ const NavBar = () => {
   return (
     <nav class='navbar fixed-top navbar-light bg-light'>
       <div className='container'>
-        <a class='navbar-brand' href='/'>
+        <a className='navbar-brand' href='/'>
           <FaStar style={{ fontSize: "30px" }} className='text-primary' />{" "}
           {/* Add the icon here */}
           Script Manager
