@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "History",
+    "description": "Review the scripts logs / history.",
+
+    "icon": "FaHistory"
+  },
+  {
+    "id": 2,
+    "title": "Run All",
+    "description": "Execute all the scripts.",
+
+    "icon": "FaPlayCircle"
+  },
+  {
+    "id": 3,
+    "title": "Scripts",
+    "description": "Run individual scripts.",
+
+    "icon": "FaCode"
+  },
+  {
+    "id": 4,
+    "title": "Report",
+    "description": "View the reports.",
+
+    "icon": "FaFileAlt"
+  },
+  {
+    "id": 5,
+    "title": "Audit",
+    "description": "Perform Audit.",
+
+    "icon": "FaSearch"
+  },
+  {
+    "id": 6,
+    "title": "Hosts",
+    "description": "Manage Hosts.",
+
+    "icon": "FaServer"
+  }
+]
