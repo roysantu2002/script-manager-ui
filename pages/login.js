@@ -30,7 +30,7 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+    <div suppressHydrationWarning={true}>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Login</Modal.Title>
@@ -69,7 +69,8 @@ const LoginPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+      </div>
+   
   );
 };
 
