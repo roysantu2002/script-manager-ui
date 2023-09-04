@@ -39,7 +39,7 @@ const Card = ({ id, title, description, icon }) => {
     }
   };
   return (
-    <div className='card'>
+    <div className='card m-3'>
       <div
         key={id}
         onClick={() => handleFeatureClick(id)}

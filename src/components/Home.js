@@ -12,7 +12,7 @@ const HomePage = () => {
             <Card
               id={card.id}
               title={card.title}
-              description={card.description}
+              // description={card.description}
               icon={card.icon}
             />
           </div>

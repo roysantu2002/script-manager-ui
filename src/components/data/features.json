@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "title": "History",
-    "name": "History",
+    "title": "Logs",
+    "name": "DeviceLog",
     "description": "Review the scripts logs / history.",
 
     "icon": "FaHistory"

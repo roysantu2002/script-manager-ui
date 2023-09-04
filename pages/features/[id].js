@@ -2,6 +2,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import data from "../../src/components/data/features.json";
+import DeviceLog from "../../src/components/features/DeviceLog";
 import Hosts from "../../src/components/features/Hosts";
 import RunAll from "../../src/components/features/RunAll";
 
@@ -24,6 +25,7 @@ const CardDetailPage = () => {
           {card.name}
           {card.name === "RunAll" && <RunAll data={card} />}
           {card.name === "Hosts" && <Hosts data={card} />}
+          {card.name === "DeviceLog" && <DeviceLog data={card} />}
           {/* Render the appropriate card component based on card name */}
           {/* {card.name === 'Runall' && <RunAll data={card} />}
           {card.name === 'CardType2' && <CardComponent2 data={card} />} */}
