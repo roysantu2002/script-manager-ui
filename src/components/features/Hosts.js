@@ -1,27 +1,10 @@
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { FaCircle } from "react-icons/fa";
+import { FaCircle, FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import axiosInstance from "../../utils/axios";
 
-const RunAll = ({ data }) => {
+const Hosts = ({ data }) => {
   const [deviceList, setDeviceList] = useState([]);
   const [deviceStatus, setDeviceStatus] = useState({});
-  const [selectedDevices, setSelectedDevices] = useState([]);
-
-  const handleCheckboxChange = (device) => {
-    if (
-      selectedDevices.find((selectedDevice) => selectedDevice.id === device.id)
-    ) {
-      setSelectedDevices(
-        selectedDevices.filter(
-          (selectedDevice) => selectedDevice.id !== device.id
-        )
-      );
-    } else {
-      setSelectedDevices([...selectedDevices, device]);
-    }
-  };
 
   const handleAction = (deviceId) => {
     sendWebSocketMessage("run");
@@ -57,18 +40,22 @@ const RunAll = ({ data }) => {
   };
 
   const sendWebSocketMessage = (messageText) => {
+    // Create a WebSocket message with the specified message text
     const message = {
       message: messageText,
     };
+
+    // Replace 'yourWebSocketEndpoint' with the actual WebSocket endpoint
     const socket = new WebSocket(
       "ws://192.168.1.103:8000/ws/scriptchat/run_script/"
     );
 
     socket.onopen = () => {
       socket.send(JSON.stringify(message));
+      // No need to close the socket immediately
     };
   };
-
+  //   console.log(`${axiosInstance}/scripts/network-devices/list/}`);
   useEffect(() => {
     // Fetch data from the API using the Axios instance
     axiosInstance
@@ -82,7 +69,7 @@ const RunAll = ({ data }) => {
       });
   }, []);
 
-  console.log(selectedDevices);
+  console.log(deviceList);
 
   return (
     <div className='table-responsive'>
@@ -111,40 +98,23 @@ const RunAll = ({ data }) => {
                   </span>
                 )}
               </td>
-              <td>
-                <td>
-                  {device.status ? (
-                    <input
-                      type='checkbox'
-                      onChange={() => handleCheckboxChange(device)}
-                      checked={
-                        selectedDevices.find(
-                          (selectedDevice) => selectedDevice.id === device.id
-                        ) !== undefined
-                      }
-                    />
-                  ) : (
-                    <input type='checkbox' disabled />
-                  )}
-                </td>
+              <td className="d-flex gap-2">
+                <span>
+                  <FaPlus />
+                </span>
+                <span>
+                  <FaEdit />
+                </span>
+                <span className='text-danger'>
+                  <FaTrash />
+                </span>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className='d-flex justify-content-center'>
-        <button
-          className={`action-button w-50 m-auto justify-content-center ${
-            selectedDevices.length === 0 ? "" : "text-success"
-          }`}
-          disabled={selectedDevices.length === 0}
-        >
-          <FontAwesomeIcon icon={faPlay} />
-          Action
-        </button>
-      </div>
     </div>
   );
 };
 
-export default RunAll;
+export default Hosts;

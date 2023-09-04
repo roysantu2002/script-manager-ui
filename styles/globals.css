@@ -45,3 +45,20 @@ a:hover {
 a:active {
   text-decoration: none;
 }
+
+/* CSS file (e.g., styles.css) */
+
+/* Add 3D effect to the status icons */
+.status-icon {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Style for the green status text */
+.status-green {
+  color: green;
+}
+
+/* Style for the red status text */
+.status-red {
+  color: red;
+}
