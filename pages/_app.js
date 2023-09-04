@@ -2,12 +2,15 @@
 import Layout from "@components/hoc/Layout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import { UserProvider } from "../src/components/UserContext";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <UserProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </UserProvider>
   );
 }
 
