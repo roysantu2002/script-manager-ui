@@ -1,16 +1,169 @@
-import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faStop, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { FaCircle } from "react-icons/fa";
 import axiosInstance from "../../utils/axios";
 
-const RunAll = ({ data }) => {
+
+const RunAll = () => {
   const [deviceList, setDeviceList] = useState([]);
   const [deviceStatus, setDeviceStatus] = useState({});
   const [selectedDevices, setSelectedDevices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [execution, setExecution] = useState(false);
+  
+  const [socket, setSocket] = useState(null); // Store the WebSocket instance here
+  const [run, setRun] = useState(false); // Store the WebSocket instance here
+  const socketUrl = "ws://192.168.1.103:8000/ws/scriptchat/run_script/";
+
+  const establishWebSocketConnection = (url, onMessageCallback) => {
+    const socket = new WebSocket(url);
+
+    socket.onopen = () => {
+      // WebSocket is open, you can send initial messages here if needed
+    };
+
+    socket.onmessage = (event) => {
+      const receivedData = event.data;
+      const parsedData = JSON.parse(receivedData);
+      console.log(parsedData);
+    
+      if (parsedData) {
+        onMessageCallback(parsedData);
+      }
+    };
+
+    socket.onclose = (event) => {
+      console.log("WebSocket connection closed:", event);
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    return socket;
+  };
+
+  useEffect(() => {
+    const message = { /* your message data here */ };
+
+    const newSocket = establishWebSocketConnection(socketUrl, (data) => {
+
+      try {
+
+        console.log(data)
+
+        // const receivedData = data;
+        // const parsedData = JSON.parse(receivedData);
+
+        // // The received data is valid JSON
+        // // You can work with the parsedData here
+        // // ...
+    
+        const message = data.message;
+        console.log("Received message:", message);
+
+        // // Now you can work with the received data
+        // console.log("Received data:", parsedData);
+
+        // You can access specific properties from the received data
+        // const message = parsedData.message;
+        // console.log("Received message:", message);
+
+        const str_message = String(message); // Ensure message is a string
+        // console.log(str_message);
+
+        // // Split the received message by ', ' to extract components
+        const components = str_message.split(', ');
+
+        // console.log(components)
+
+        // Check if the components array has the expected format
+        if (components.length === 3) {
+          const [status, scriptName, ipAddress] = components;
+
+          // Update the state with the extracted components
+          setMessages((prevMessages) => {
+            // Check if the new item (status, scriptName, ipAddress) already exists in the array
+            const newItem = { status, scriptName, ipAddress };
+            const isDuplicate = prevMessages.some((message) => {
+              return (
+                message.status === newItem.status &&
+                message.scriptName === newItem.scriptName &&
+                message.ipAddress === newItem.ipAddress
+              );
+            });
+          
+            if (!isDuplicate) {
+              // If it's not a duplicate, add the new item to the array
+              return [...prevMessages, newItem];
+            }
+          
+            // If it's a duplicate, don't modify the array
+            return prevMessages;
+          });
+
+          // if (status === "start") {
+          //   // Set executionData to the received data
+          //   setExecutionData({ status, scriptName, ipAddress });
+          // }
+        } else {
+          console.error("Invalid message format:", message);
+        }
+      } catch (error) {
+        console.error("Error while processing the received data:", error);
+        // Handle the error gracefully, e.g., by setting some default values or displaying an error message to the user.
+      }
+    });
+
+    setSocket(newSocket);
+
+    // Clean up the WebSocket connection when the component unmounts
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, []); // Run this effect only once during component mounting
+
+
+  console.log(messages)
+
+  // useEffect(() => {
+  //   // Add WebSocket event listener for incoming messages
+  //   const handleWebSocketMessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     const { message } = data;
+
+  //     // Check the message and set the corresponding state
+  //     let newState;
+  //     if (message.includes("Executing")) {
+  //       newState = "executing";
+  //     } else if (message.includes("Finished executing")) {
+  //       newState = "done";
+  //     } else {
+  //       newState = "ready";
+  //     }
+
+  //     // Update the messages state with the new message and state
+  //     setMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       { message, state: newState },
+  //     ]);
+  //   };
+
+  //   // Add event listener to WebSocket connection
+  //   yourWebSocketConnection.addEventListener("message", handleWebSocketMessage);
+
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     yourWebSocketConnection.removeEventListener(
+  //       "message",
+  //       handleWebSocketMessage
+  //     );
+  //   };
+  // }, [yourWebSocketConnection]); // Replace with your WebSocket connection
 
   const handleCheckboxChange = (device) => {
     if (
@@ -27,12 +180,16 @@ const RunAll = ({ data }) => {
   };
 
   const handleAction = () => {
+    // console.log("setting run")
+    // setRun(true);
+    // setExecution(true);
     sendWebSocketMessage("run");
   };
 
   const handleStop = () => {
     setLoading(false);
     setExecution(false);
+    setMessages([])
   };
 
   const stopDevice = (deviceId) => {
@@ -47,70 +204,95 @@ const RunAll = ({ data }) => {
     console.log(`Running device with ID ${deviceId}`);
   };
 
-  const sendWebSocketMessage = (messageText) => {
-    setExecution(true);
-    console.log(messageText);
-    const message = {
-      message: messageText,
-    };
+  // Now, you can use the 'socket' variable in your 'sendWebSocketMessage' function
+const sendWebSocketMessage = (messageText) => {
+  setExecution(true);
+  console.log(messageText);
 
+  const message = {
+    message: messageText,
+  };
+
+  if (socket) {
     try {
-      const socket = new WebSocket(
-        "ws://192.168.1.103:8000/ws/scriptchat/run_script/"
-      );
-
-      socket.onopen = () => {
-        socket.send(JSON.stringify(message));
-      };
-
-      socket.onmessage = (event) => {
-        // const receivedData = event.data;
-        // // You can parse the data if it's in JSON format
-        // const response = JSON.parse(receivedData);
-
-        // if (response && response.message.toLowerCase().includes("executed")) {
-        //   setExecution(false);
-        // }
-        try {
-          const receivedData = event.data;
-          // You can parse the data if it's in JSON format
-          const parsedData = JSON.parse(receivedData);
-
-          // Now you can work with the received data
-          console.log("Received data:", parsedData);
-
-          // You can access specific properties from the received data
-          const message = parsedData.message;
-          console.log("Received message:", message);
-          if (message.toLowerCase().includes("executed")) {
-            setExecution(false);
-          }
-
-          // Add your custom logic to handle the received message here
-        } catch (error) {
-          console.error("Error while processing the received data:", error);
-          // Handle the error gracefully, e.g., by setting some default values or displaying an error message to the user.
-        }
-      };
-
-      socket.onclose = (event) => {
-        console.log("WebSocket connection closed:", event.code, event.reason);
-        // Handle WebSocket close event if needed
-        // You can add additional logic here
-      };
-
-      socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        // Handle WebSocket error if needed
-        // You can add additional error handling logic here
-      };
+      socket.send(JSON.stringify(message));
     } catch (error) {
-      console.error("WebSocket connection error:", error);
-      // Handle any exceptions that occur during WebSocket setup
-      // You can add additional error handling logic here
+      console.error("Error while sending WebSocket message:", error);
+      // Handle any exceptions that occur during message sending
       setExecution(false); // Ensure that 'execution' is set to false in case of an exception
     }
-  };
+  } else {
+    console.error("WebSocket connection not established.");
+    // Handle the case where the WebSocket connection is not available
+    setExecution(false); // Ensure that 'execution' is set to false
+  }
+};
+
+  // const sendWebSocketMessage = (messageText) => {
+  //   setExecution(true);
+  //   console.log(messageText);
+
+  //   const message = {
+  //     message: messageText,
+  //   };
+
+  //   try {
+  //     const socket = new WebSocket(
+  //       "ws://192.168.1.103:8000/ws/scriptchat/run_script/"
+  //     );
+
+  //     socket.onopen = () => {
+  //       socket.send(JSON.stringify(message));
+  //     };
+
+  //     socket.onmessage = (event) => {
+  //       // const receivedData = event.data;
+  //       // // You can parse the data if it's in JSON format
+  //       // const response = JSON.parse(receivedData);
+
+  //       // if (response && response.message.toLowerCase().includes("executed")) {
+  //       //   setExecution(false);
+  //       // }
+  //       try {
+  //         const receivedData = event.data;
+  //         // You can parse the data if it's in JSON format
+  //         const parsedData = JSON.parse(receivedData);
+
+  //         // Now you can work with the received data
+  //         // console.log("Received data:", parsedData);
+
+  //         // // You can access specific properties from the received data
+  //         const message = parsedData.message;
+  //         // console.log("Received message:", message);
+  //         if (message.toLowerCase().includes("executed")) {
+  //           setExecution(false);
+  //         }
+
+  //         // Add your custom logic to handle the received message here
+  //       } catch (error) {
+  //         console.error("Error while processing the received data:", error);
+  //         // Handle the error gracefully, e.g., by setting some default values or displaying an error message to the user.
+  //       }
+  //     };
+
+  //     // socket.onclose = (event) => {
+  //     //   console.log("WebSocket connection closed:", event.code, event.reason);
+  //     //   // Handle WebSocket close event if needed
+  //     //   // You can add additional logic here
+  //     // };
+
+  //     socket.onerror = (error) => {
+  //       console.error("WebSocket error:", error);
+  //       // Handle WebSocket error if needed
+  //       // You can add additional error handling logic here
+  //     };
+  //   } catch (error) {
+  //     console.error("WebSocket connection error:", error);
+  //     // Handle any exceptions that occur during WebSocket setup
+  //     // You can add additional error handling logic here
+  //     setExecution(false); // Ensure that 'execution' is set to false in case of an exception
+  //   }
+  // };
 
   useEffect(() => {
     setLoading(true);
@@ -154,18 +336,8 @@ const RunAll = ({ data }) => {
                 <tr key={device.id}>
                   <td>{device.ip_address}</td>
                   <td>{device.host_name}</td>
-                  <td>
-                    {device.status ? (
-                      <span className='text-success'>
-                        <FaCircle />
-                      </span>
-                    ) : (
-                      <span className='text-danger'>
-                        <FaCircle />
-                      </span>
-                    )}
-                  </td>
-                  <td>
+                
+        
                     <td>
                       {device.status ? (
                         <input
@@ -182,13 +354,27 @@ const RunAll = ({ data }) => {
                         <input type='checkbox' disabled />
                       )}
                     </td>
-                  </td>
+                
                 </tr>
               ))}
             </tbody>
           </table>
           <div className='d-flex justify-content-center border-1 shadow-sm'>
-            <button
+
+          {/* <button
+              className={`btn action-button w-50 m-auto justify-content-center ${
+                selectedDevices.length === 0 ? "" : "text-success"
+              }`}
+              disabled={execution}
+              onClick={() => handleAction()}
+            >
+         
+                  <FontAwesomeIcon icon={faPlay} />
+                  <span> Run </span>
+          
+            </button> */}
+            
+            {/* <button
               className={`btn action-button w-50 m-auto justify-content-center ${
                 selectedDevices.length === 0 ? "" : "text-success"
               }`}
@@ -205,17 +391,86 @@ const RunAll = ({ data }) => {
                   <span> Run </span>
                 </>
               )}
-            </button>
+            </button> */}
+
+            {execution ? (
             <button
               className='btn action-button w-50 m-auto justify-content-center'
               onClick={() => handleStop()}
             >
               {" "}
-              <FontAwesomeIcon icon={faStop} /> Stop
+              <FontAwesomeIcon icon={faStop} className="text-danger"/> Stop
             </button>
+          ) :  
+          
+          (
+          
+          <button
+          className={`btn action-button w-50 m-auto justify-content-center ${
+            "text-success"
+          }`}
+          disabled={execution}
+          onClick={() => handleAction()}
+        >
+              <FontAwesomeIcon icon={faPlay} />
+              <span> Run </span>
+      
+        </button>
+
+        )}
           </div>
         </>
       )}
+
+      <>
+      <h1 className="text-center">Script Execution</h1>
+      {messages.length > 0 ? (
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Script Name</th>
+              <th>IP Address</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {messages.map((messageData, index) => (
+              <tr key={index}>
+              <td>
+                  {device.status === 'start' ? (
+                    <span className='text-success'>
+                      <FontAwesomeIcon icon={faPlay} /> Start
+                    </span>
+                  ) : device.status === 'stop' ? (
+                    <span className='text-warning'>
+                      <FontAwesomeIcon icon={faStop} /> Stop
+                    </span>
+                  ) : device.status === 'done' ? (
+                    <span className='text-info'>
+                      <FontAwesomeIcon icon={faCheckCircle} /> Done
+                    </span>
+                  ) : (
+                    <span className='text-danger'>
+                      <FontAwesomeIcon icon={faCircle} /> Unknown
+                    </span>
+                  )}
+                </td>
+                <td>{messageData.scriptName}</td>
+                <td>{messageData.ipAddress}</td>
+                <td>
+                  {/* Add your action buttons or elements here */}
+                  {/* Example: */}
+                  <button className="btn btn-primary">View Details</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-center">No messages received yet.</p>
+      )}
+      </>
     </div>
   );
 };
