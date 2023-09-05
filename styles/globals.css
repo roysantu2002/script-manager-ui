@@ -62,3 +62,10 @@ a:active {
 .status-red {
   color: red;
 }
+
+.custom-round-button {
+  width: 40px; /* Adjust the width to your preference */
+  height: 40px; /* Adjust the height to your preference */
+  border-radius: 50%; /* Makes the button round */
+  padding: 0; /* Removes any padding to ensure the button is completely round */
+}

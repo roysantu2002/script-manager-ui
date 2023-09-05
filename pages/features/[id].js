@@ -6,8 +6,11 @@ import DeviceLog from "../../src/components/features/DeviceLog";
 import Hosts from "../../src/components/features/Hosts";
 import RunAll from "../../src/components/features/RunAll";
 import Scripts from "../../src/components/features/Scripts";
+import { useUser } from "../../src/components/UserContext"
 
 const CardDetailPage = () => {
+  const { user, logout } = useUser(); // Get user and logout function from the context
+
   const router = useRouter();
   const { id } = router.query;
   // State to hold card data
@@ -18,26 +21,43 @@ const CardDetailPage = () => {
     setCard(selectedCard);
   }, [id]);
 
+  useEffect(() => {
+    const checkUserInterval = setInterval(() => {
+      if (!user) {
+        router.push("/");
+      }
+    }, 1000); // Check every 1 second (adjust the interval as needed)
+  
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(checkUserInterval);
+  }, [user]);
+
+
   return (
-    <div style={{ marginTop: "100px" }}>
-      {card ? (
-        <>
-          <h1>{card && card.title}</h1>
-          {card.name}
-          {card.name === "RunAll" && <RunAll data={card} />}
-          {card.name === "Hosts" && <Hosts data={card} />}
-          {card.name === "DeviceLog" && <DeviceLog data={card} />}
-          {card.name === "Scripts" && <Scripts data={card} />}
-          {/* Render the appropriate card component based on card name */}
-          {/* {card.name === 'Runall' && <RunAll data={card} />}
-          {card.name === 'CardType2' && <CardComponent2 data={card} />} */}
-          {/* Add cases for other card types */}
-        </>
-      ) : (
-        <p>Loading...</p>
+    <>
+      {!user ? null : (
+        <div style={{ marginTop: "100px" }}>
+          {card ? (
+            <>
+              <h1>{card && card.title}</h1>
+              {card.name}
+              {card.name === "RunAll" && <RunAll data={card} />}
+              {card.name === "Hosts" && <Hosts data={card} />}
+              {card.name === "DeviceLog" && <DeviceLog data={card} />}
+              {card.name === "Scripts" && <Scripts data={card} />}
+              {/* Render the appropriate card component based on card name */}
+              {/* {card.name === 'Runall' && <RunAll data={card} />}
+              {card.name === 'CardType2' && <CardComponent2 data={card} />} */}
+              {/* Add cases for other card types */}
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
+  
 };
 
 export default CardDetailPage;

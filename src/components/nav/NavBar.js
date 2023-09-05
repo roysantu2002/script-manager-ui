@@ -5,6 +5,7 @@ import { useUser } from "../UserContext";
 import LoginPageModal from "../account/LoginPageModal"
 import { useState } from "react";
 import usersData from "../../data/users.json"
+import { useRouter } from 'next/router';
 
 const NavBar = () => {
   const { user, logout } = useUser(); // Get user and logout function from the context
@@ -13,9 +14,15 @@ const NavBar = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // State for login errors
   const { login } = useUser(); // Get the l
+  const router = useRouter();
 
   const handleLoginModalClose = () => {
     setShowLoginModal(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push("/")
   };
 
   const handleLoginLinkClick = () => {
@@ -30,16 +37,14 @@ const NavBar = () => {
     );
 
     if (user && user.role) {
-      // If a matching user is found, set their role directly in the context
+ 
       login({ username, role: user.role });
-
-      // Redirect to the dashboard
       window.location.href = "/";
     }
   };
 
   return (
-    <nav class='navbar fixed-top navbar-light bg-light'>
+    <nav className='navbar fixed-top navbar-light bg-light'>
       <div className='container'>
         <a className='navbar-brand' href='/'>
           <FaStar style={{ fontSize: "30px" }} /> {/* Add the icon here */}
@@ -48,7 +53,7 @@ const NavBar = () => {
         <div className='my-2 my-lg-0'>
           {user ? (
             // If the user is authenticated, show a logout button
-            <Button variant='outline-danger' onClick={logout}>
+            <Button variant='outline-danger' onClick={handleLogout}>
               Logout
             </Button>
           ) : (

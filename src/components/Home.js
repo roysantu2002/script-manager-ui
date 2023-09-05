@@ -5,10 +5,12 @@ import NetworkDashboard from "../components/dash/NetworkDashboard";
 import Card from "../components/ui/Card";
 import lottie from "lottie-web"; // Import Lottie
 import animationData from "../../public/home.json"
+
+import { useRouter } from 'next/router';
 const HomePage = () => {
   const animationContainerRef = useRef(null);
   const { user } = useUser();
-  console.log(user);
+  const router = useRouter();
 
   useEffect(() => {
     const animation = lottie.loadAnimation({
@@ -24,23 +26,16 @@ const HomePage = () => {
     };
   }, []); // Re-run the effect when the modal is shown or hidden
 
-  // useEffect(() => {
-  //   // Check if the user is authenticated and get their information from the token.
-  //   const token = localStorage.getItem("token"); // Assuming you store the token in localStorage.
-
-  //   if (!token) {
-  //     router.push("/login");
-  //   } else {
-  //     try {
-  //       // Verify and decode the JWT token to get user data.
-  //       const decodedToken = jwt.verify(token, "your-secret-key"); // Use the same secret key you used for signing.
-  //       setUser(decodedToken);
-  //     } catch (error) {
-  //       // Handle token verification errors (e.g., token expired).
-  //       router.push("/login");
-  //     }
-  //   }
-  // }, [router]);
+  useEffect(() => {
+    const checkUserInterval = setInterval(() => {
+      if (!user) {
+        router.push("/");
+      }
+    }, 1000); // Check every 1 second (adjust the interval as needed)
+  
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(checkUserInterval);
+  }, [user]);
 
   return (
     <div>
