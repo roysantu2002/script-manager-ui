@@ -10,6 +10,9 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 
+
+import Card from 'react-bootstrap/Card';
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -34,7 +37,11 @@ export const data = {
 
 const ExecutionFrequency = () => {
     return(
+        <Card >
+        <Card.Body>
    <Radar data={data} />
+   </Card.Body>
+   </Card>
     )
 }
 

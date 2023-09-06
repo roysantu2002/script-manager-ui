@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import MonthlySavings from "../charts/MonthlySavings"
 import ExecutionFrequency from "../charts/ExecutionFrequency"
+import PassedFailed from "../charts/PassedFailed"
+import ScriptsDevices from "../charts/ScriptsDevices"
 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -68,7 +70,7 @@ export const productivity = {
 const HomeDash = () => {
     return (
         <Container>
-      <Row>
+      <Row className='m-3'>
         <Col md={4} sm={12}>
         <Card >
             <Card.Body>
@@ -80,7 +82,11 @@ const HomeDash = () => {
         </Col>
 
   <Col md={4} sm={12}>
+  <Card >
+            <Card.Body>
         <MonthlySavings/>
+        </Card.Body>
+        </Card>
         </Col>
 
         {/* <Col md={4} sm={12}>
@@ -109,9 +115,16 @@ const HomeDash = () => {
 
         {/* Add more columns here if needed */}
       </Row>
-      <Row>
+      <Row className='m-3'>
         <Col md={4} sm={6}>
             <ExecutionFrequency/>
+        </Col>
+        <Col md={4} sm={6}>
+            <PassedFailed/>
+        </Col>
+    
+        <Col md={4} sm={6}>
+            <ScriptsDevices/>
         </Col>
       </Row>
     </Container>

@@ -1,0 +1,35 @@
+/* components/Sidebar.module.css */
+.sidebar {
+  
+  position: fixed; /* Add position: fixed to ensure it's always visible */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Set the height to 100% of the viewport */
+  width: 10%;
+  background-color: #f8f9fa;
+  z-index: 999; /* Set a higher z-index value to ensure it's on top of other elements */
+}
+.sidebar ul {
+  margin-top: 100px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 8px 12px; /* Reduce the padding */
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px; /* Adjust the font size */
+}
+
+.sidebar a:hover {
+  color: #007bff;
+}
+
+.icon {
+  font-size: 18px; /* Adjust the icon size */
+  margin-right: 8px; /* Add some spacing between icon and text */
+}
