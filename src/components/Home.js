@@ -6,7 +6,10 @@ import Card from "../components/ui/Card";
 import lottie from "lottie-web"; // Import Lottie
 import animationData from "../../public/home.json"
 
+import HomeDash from "../components/features/HomeDash";
+
 import { useRouter } from 'next/router';
+
 const HomePage = () => {
   const animationContainerRef = useRef(null);
   const { user } = useUser();
@@ -46,6 +49,7 @@ const HomePage = () => {
         />
       ) : user.role === "admin" ? (
         <>
+        <HomeDash/>
           <NetworkDashboard />
           <div className='row'>
             {data.map((card) => (

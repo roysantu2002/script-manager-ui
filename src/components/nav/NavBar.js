@@ -6,6 +6,7 @@ import LoginPageModal from "../account/LoginPageModal"
 import { useState } from "react";
 import usersData from "../../data/users.json"
 import { useRouter } from 'next/router';
+import { FaMagic } from 'react-icons/fa'; 
 
 const NavBar = () => {
   const { user, logout } = useUser(); // Get user and logout function from the context
@@ -47,8 +48,8 @@ const NavBar = () => {
     <nav className='navbar fixed-top navbar-light bg-light'>
       <div className='container'>
         <a className='navbar-brand' href='/'>
-          <FaStar style={{ fontSize: "30px" }} /> {/* Add the icon here */}
-          Script Manager
+          <FaMagic style={{ fontSize: "30px" }} /> {/* Add the icon here */}
+          ScriptGenius
         </a>
         <div className='my-2 my-lg-0'>
           {user ? (

@@ -106,7 +106,7 @@ const RunAll = () => {
         }
 
         const message = data.message;
-        console.log('Received message:', message);
+        // console.log('Received message:', message);
 
         // // Now you can work with the received data
         // console.log("Received data:", parsedData);
@@ -119,12 +119,24 @@ const RunAll = () => {
         // console.log(str_message);
 
         //complted received
-        if (message.includes("alldone")) {
-          console.log("Message alldone 'completed'.");
+        if (str_message.includes("alldone")) {
+
+          console.log('Received message:', str_message);
+
+          const stopMessage = {
+            message: "stop",
+          };
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify(stopMessage));
+          // Rest of your code
+        } else {
+          console.error('WebSocket is not open or does not exist.');
+        }
           setExecution(false);
+          setSocket(null)
           if (socket) {
-                socket.close();
-              }
+              socket.close();
+          }
       } 
 
         // // Split the received message by ', ' to extract components
@@ -183,7 +195,7 @@ const RunAll = () => {
         socket.close();
       }
     };
-  }, []); // Run this effect only once during component mounting
+  }, [execution]); // Run this effect only once during component mounting
 
   // useEffect(() => {
   //   // ... (your other code)
