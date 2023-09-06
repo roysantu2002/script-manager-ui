@@ -6,6 +6,7 @@ import DeviceLog from "../../src/components/features/DeviceLog";
 import Hosts from "../../src/components/features/Hosts";
 import RunAll from "../../src/components/features/RunAll";
 import Scripts from "../../src/components/features/Scripts";
+import Audit from "../../src/components/features/Audit";
 import { useUser } from "../../src/components/UserContext"
 
 const CardDetailPage = () => {
@@ -45,6 +46,7 @@ const CardDetailPage = () => {
               {card.name === "Hosts" && <Hosts data={card} />}
               {card.name === "DeviceLog" && <DeviceLog data={card} />}
               {card.name === "Scripts" && <Scripts data={card} />}
+              {card.name === "Audit" && <Audit data={card} />}
               {/* Render the appropriate card component based on card name */}
               {/* {card.name === 'Runall' && <RunAll data={card} />}
               {card.name === 'CardType2' && <CardComponent2 data={card} />} */}

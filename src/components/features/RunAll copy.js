@@ -322,7 +322,6 @@ const RunAll = () => {
 
     // const newSocket = establishWebSocketConnection(socketUrl, (data) => {
 
-    console.log(messageText)
     setExecution(true);
     // console.log(messageText);
 
@@ -333,38 +332,28 @@ const RunAll = () => {
 
     // console.log(activeDeviceIPs)
 
-
     const message = {
       message: selectedDevices.length > 0 ? selectedDevices : activeDeviceIPs,
     };
 
-    // if(messageText === 'stop'){
-    //   const message = {
-    //     message: messageText,
-    //   };
-     
-    // }
-
-  
     // const message = {
     //   message: selectedDevices.length > 0 ? selectedDevices : deviceList,
     // };
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
-          if (messageText === 'stop') {
-              const stopMessage = {
-                  message: messageText,
-              };
-              console.log(stopMessage)
-              socket.send(JSON.stringify(stopMessage)); // Send 'stop' message
-          } else {
-              socket.send(JSON.stringify(message)); // Send 'message' based on conditions
-          }
+        socket.send(JSON.stringify(message));
       } catch (error) {
-          console.error('Error sending message:', error);
+        // console.error('Error while sending WebSocket message:', error);
+        // Handle any exceptions that occur during message sending
+        setExecution(false); // Ensure that 'execution' is set to false in case of an exception
       }
-  }
-}
+    } else {
+      // console.error('WebSocket connection not established.');
+      // Handle the case where the WebSocket connection is not available
+      setExecution(false); // Ensure that 'execution' is set to false
+    }
+
+  };
 
   // const sendWebSocketMessage = (messageText) => {
   //   setExecution(true);
@@ -522,7 +511,7 @@ const RunAll = () => {
               )}
             </button> */}
 
-            {execution ? (
+            {execution && messages ? (
               <button
                 className="btn btn-sm custom-round-button"
                 onClick={() => handleStop()}
@@ -533,7 +522,7 @@ const RunAll = () => {
             ) : (
               <button
                 className="btn-primary me-md-2 custom-round-button"
-                disabled={execution}
+                disabled={execution && messages}
                 onClick={() => handleAction()}
               >
                 <FontAwesomeIcon icon={faPlay} />
