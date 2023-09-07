@@ -13,14 +13,20 @@ import LoginPageModal from "./LoginPageModal"; // Adjust the import path
     const [error, setError] = useState("");
     const { login } = useUser();
   
+
+
+    
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
   
     const handleSubmit = async (e) => {
       e.preventDefault();
+
       const user = usersData.users.find(
         (userData) => userData.username === username
       );
+
+
   
       if (user && user.role) {
         login({ username, role: user.role });

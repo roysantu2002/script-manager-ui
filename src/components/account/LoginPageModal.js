@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Alert } from "react-bootstrap";
 
 const LoginPageModal = ({
   show,
@@ -17,17 +17,22 @@ const LoginPageModal = ({
         <Modal.Title>Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {error && <p>{error}</p>}
+      {error && (
+          <Alert variant="danger">{error}</Alert>
+        )}
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="username">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Form.Group>
+          <Form.Label>Role</Form.Label>
+          <Form.Control
+            as='select'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          >
+            <option value=''>Select Role</option>
+            <option value='user'>User</option>
+            <option value='admin'>Admin</option>
+          </Form.Control>
+        </Form.Group>
 
           <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
@@ -45,7 +50,7 @@ const LoginPageModal = ({
           <Modal.Footer>
 
           <div className="modal-footer"> <button type="submit" className="btn btn-primary">Login</button>
-              <button id ="btnHideModal" type="button" className="btn btn-secondary" data-dismiss="modal">Close</button></div>
+            <button id ="btnHideModal" type="button" className="btn btn-secondary" data-dismiss="modal"  onClick={handleClose}>Close</button></div>
               </Modal.Footer>
         
         </Form>

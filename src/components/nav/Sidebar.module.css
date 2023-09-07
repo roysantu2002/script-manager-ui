@@ -1,35 +1,160 @@
-/* components/Sidebar.module.css */
 .sidebar {
-  
-  position: fixed; /* Add position: fixed to ensure it's always visible */
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100vh; /* Set the height to 100% of the viewport */
-  width: 10%;
-  background-color: #f8f9fa;
-  z-index: 999; /* Set a higher z-index value to ensure it's on top of other elements */
-}
-.sidebar ul {
-  margin-top: 100px;
-  list-style-type: none;
-  padding: 0;
+  height: 100%;
+  width: 200px;
+  z-index: 9999;
+  padding-top: 56px; /* Adjust this value to match your header height */
+  background-color: #fff; /* Set the overlay background color */
 }
 
-.sidebar li {
-  padding: 8px 12px; /* Reduce the padding */
+.sidebar-close-btn {
+  position: absolute;
+  top: 10px; /* Adjust this value for the desired vertical position */
+  right: 10px; /* Adjust this value for the desired horizontal position */
+  z-index: 9999;
+  background: transparent;
+  color: grey;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 10px;
+  cursor: pointer;
+  border: 1px solid grey;
+  display: block; /* Display the close button */
 }
 
-.sidebar a {
+@media screen and (max-width: 768px) {
+  .sidebar-close-btn {
+    display: block; /* Ensure the close button is displayed on smaller screens */
+  }
+}
+
+.sidebar-overlay {
+  display: block;
+  background-color: #504538; /* Set the overlay background color */
+}
+.logo-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0; /* Increase padding for better visibility on smaller screens */
+  box-sizing: border-box; /* Ensure padding doesn't affect the total width */
+  text-align: center; /* Center align text content */
+
+  /* Add media query for smaller screens */
+  @media (max-width: 768px) {
+    padding: 20px 0; /* Adjust padding as needed for smaller screens */
+  }
+}
+.logo-explain {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ccc;
+}
+
+.sidebar-container {
+  margin-top: 10%;
+  padding: 0 20px;
+}
+
+.sidebar-menu-item {
+  list-style: none;
+  width: 100%;
+  padding: 0 10px;
+  text-decoration: none; /* Remove underlines */
+}
+
+.sidebar-menu-item.inactive {
+  color: #504538; /* Adjusted text color for better contrast */
+}
+
+.sidebar-menu-item.active {
+  color: #504538;
+  display: inline-block; /* Make the element a block-level box */
+  position: relative; /* Create a stacking context for the pseudo-element */
+  margin-top: 5px; /* Adjust margin as needed */
+}
+
+.sidebar-menu-item.active::after {
+  content: ""; /* Create a pseudo-element for the underline */
+  position: absolute;
+  bottom: 0; /* Position the underline at the bottom of the parent */
+  left: 0; /* Start the underline from the left edge */
+  width: 100%; /* Make the underline span the full width */
+  height: 0.1em; /* Adjust thickness as needed */
+  background-color: #800080; /* Adjust underline color as needed */
+}
+
+.sidebar-menu-item a {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 0;
+  color: #504538;
+  transition: all 0.5s ease;
   text-decoration: none;
-  color: #333;
-  font-size: 16px; /* Adjust the font size */
 }
 
-.sidebar a:hover {
-  color: #007bff;
+/* Remove underlines for links, li, and ul elements within .sidebar-menu-item */
+.sidebar-menu-item a,
+.sidebar-menu-item li,
+.sidebar-menu-item ul {
+  text-decoration: none; /* Remove underlines */
 }
 
-.icon {
-  font-size: 18px; /* Adjust the icon size */
-  margin-right: 8px; /* Add some spacing between icon and text */
+.sidebar-menu-item.active a {
+  color: #504538;
+}
+
+.sidebar-menu-item a:hover {
+  font-weight: 600;
+}
+
+.sidebar-menu-item a span {
+  color: #504538;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.sidebar-footer {
+  background: transparent;
+  color: #504538;
+  padding: 20px 0;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.footer-item span {
+  color: #ccc;
+  margin-left: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 360px), (max-width: 768px) {
+  .container {
+    display: none;
+  }
+
+  .container.active {
+    display: block;
+  }
+
+  .sidebar-close-btn {
+    display: block;
+  }
 }

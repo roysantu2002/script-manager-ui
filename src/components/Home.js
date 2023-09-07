@@ -6,7 +6,9 @@ import Card from "../components/ui/Card";
 import lottie from "lottie-web"; // Import Lottie
 import animationData from "../../public/home.json"
 
+import AdminDash from "./AdminDash";
 import HomeDash from "../components/features/HomeDash";
+import UserDash from "./UserDash"
 
 import { useRouter } from 'next/router';
 
@@ -49,8 +51,9 @@ const HomePage = () => {
         />
       ) : user.role === "admin" ? (
         <>
+        <AdminDash/>
         <HomeDash/>
-          <NetworkDashboard />
+          {/* <NetworkDashboard /> */}
           <div className='row'>
             {data.map((card) => (
               <div key={card.id} className='col-md-6'>
@@ -65,7 +68,7 @@ const HomePage = () => {
           </div>
         </>
       ) : (
-        <h1>Access Denied: You don't have permission to view this page.</h1>
+       <UserDash/>
       )}
     </div>
   );

@@ -38,16 +38,17 @@ const LoginPage = () => {
         <Modal.Body>
           {error && <p>{error}</p>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId='username'>
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter username'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </Form.Group>
-
+          <Form.Group controlId='username'>
+          <Form.Label>Role</Form.Label>
+          <Form.Control
+            as='select'
+            value={role}
+            onChange={(e) => setUsername(e.target.value)}
+          >
+            <option value='user'>User</option>
+            <option value='admin'>Admin</option>
+          </Form.Control>
+        </Form.Group>
             <Form.Group controlId='password'>
               <Form.Label>Password</Form.Label>
               <Form.Control
