@@ -18,7 +18,7 @@ const UserDash = () => {
       case 'RunAll':
         return <RunAll />;
       default:
-        return null;
+        return <DeviceLog />;
     }
   };
 

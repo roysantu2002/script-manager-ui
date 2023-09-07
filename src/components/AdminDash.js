@@ -4,11 +4,9 @@ import { Nav, Navbar } from 'react-bootstrap';
 import DeviceLog from '../components/features/DeviceLog'
 import Hosts from '../components/features/Hosts'
 import RunAll from '../components/features/RunAll'
+import ChartDash from '../components/charts/ChartDash'
+import Audit from '../components/features/Audit'
 
-import MonthlySavings from "../components/charts/MonthlySavings"
-import ExecutionFrequency from "../components/charts/ExecutionFrequency"
-import PassedFailed from "../components/charts/PassedFailed"
-import ScriptsDevices from "../components/charts/ScriptsDevices"
 
 
 const AdminDash = () => {
@@ -16,22 +14,19 @@ const AdminDash = () => {
 
   const renderComponent = () => {
     switch (selectedComponent) {
+      case 'Quickview':
+        return <ChartDash />;
       case 'DeviceLog':
         return <DeviceLog />;
       case 'Hosts':
         return <Hosts />;
       case 'RunAll':
         return <RunAll />;
-      case 'MonthlySavings':
-        return <MonthlySavings />;
-      case 'ExecutionFrequency':
-        return <ExecutionFrequency />;
-      case 'PassedFailed':
-        return <PassedFailed />;
-      case 'ScriptsDevices':
-        return <ScriptsDevices />;
+      case 'Audit':
+        return <Audit />;
+
       default:
-        return null;
+        return <ChartDash />;
     }
   };
 
@@ -42,12 +37,12 @@ const AdminDash = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
+            <Nav.Link onClick={() => setSelectedComponent('Quickview')}>Quickview</Nav.Link>
             <Nav.Link onClick={() => setSelectedComponent('DeviceLog')}>DeviceLog</Nav.Link>
             <Nav.Link onClick={() => setSelectedComponent('Hosts')}>Hosts</Nav.Link>
             <Nav.Link onClick={() => setSelectedComponent('RunAll')}>RunAll</Nav.Link>
-            <Nav.Link onClick={() => setSelectedComponent('RunAll')}>MonthlySavings</Nav.Link>
-            <Nav.Link onClick={() => setSelectedComponent('RunAll')}>PassedFailed</Nav.Link>
-            <Nav.Link onClick={() => setSelectedComponent('RunAll')}>ScriptsDevices</Nav.Link>
+            <Nav.Link onClick={() => setSelectedComponent('Audit')}>Audit</Nav.Link>
+           
           </Nav>
         </Navbar.Collapse>
       </Navbar>

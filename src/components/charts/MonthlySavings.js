@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import faker from 'faker';
+import Card from 'react-bootstrap/Card';
 
 ChartJS.register(
   CategoryScale,
@@ -56,13 +57,15 @@ export const data = {
 };
 
 
-const MonthlySavingsChart = () => {
+const MonthlySavings = () => {
   return (
-    <div>
-      <h6>Monthly Savings vs. Previous Spending</h6>
+    <Card >
+
+
        <Line options={options} data={data} />;
-    </div>
+  
+    </Card>
   );
 };
 
-export default MonthlySavingsChart;
+export default MonthlySavings;

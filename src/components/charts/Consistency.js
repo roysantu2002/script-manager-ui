@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
-
-
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import Card from 'react-bootstrap/Card';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const data = {
@@ -20,10 +20,12 @@ export const data = {
 
 const Consistency = () => {
   return (
-    <div>
-      <h6>Monthly Savings vs. Previous Spending</h6>
+    <Card >
+    <Card.Body>
+      <h6>Consistency, Quality</h6>
       <Pie data={data} />
-    </div>
+    </Card.Body>
+    </Card>
   );
 };
 
