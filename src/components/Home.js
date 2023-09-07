@@ -77,7 +77,7 @@ const HomePage = () => {
                <h1>Bob, a network engineer</h1>
      <div className="avatar avatar-lg mb-3">
          <Image
-           src="/images/main-page.jpg" // Replace with the path to your image
+           src="/images/main1.jpg" // Replace with the path to your image
            alt="Image Alt Text"
            width={300} // Set the desired width
           height={300} // Set the desired height

@@ -69,3 +69,8 @@ a:active {
   border-radius: 50%; /* Makes the button round */
   padding: 0; /* Removes any padding to ensure the button is completely round */
 }
+
+
+.small-icon {
+  font-size: 16px; /* Adjust the size as needed */
+}
