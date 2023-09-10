@@ -9,24 +9,26 @@ const DeviceLog = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const latestLogs = {};
-
-  // Iterate through the log data to find the latest log for each device
+  const latestLogsByIp = {};
   logs.forEach((log) => {
-    const deviceId = log.device_id;
+    const deviceIp = log.device_ip;
     const createdAt = moment(log.created_at);
-
+  
     if (
-      !latestLogs[deviceId] ||
-      createdAt.isAfter(latestLogs[deviceId].createdAt)
+      !latestLogsByIp[deviceIp] ||
+      createdAt.isAfter(latestLogsByIp[deviceIp].createdAt)
     ) {
-      latestLogs[deviceId] = {
+      latestLogsByIp[deviceIp] = {
         createdAt,
         logData: log.log_data,
-        ipAddress: log.ip_address,
+        ipAddress: deviceIp, // Store the IP addres
       };
     }
   });
+  
+  const filteredLogs = Object.values(latestLogsByIp);
+  
+  console.log(filteredLogs);
 
   useEffect(() => {
     setLoading(true);
@@ -34,6 +36,7 @@ const DeviceLog = () => {
       .get("/scripts/logs/")
       .then((response) => {
         // Assuming the response data is an array of devices
+        console.log(response.data)
         setLogs(response.data);
         setLoading(false);
       })
@@ -44,19 +47,19 @@ const DeviceLog = () => {
   }, []);
 
   // Map through the log data to generate cards for each device
-  const deviceCards = Object.keys(latestLogs).map((deviceId) => (
+  const deviceCards = Object.keys(filteredLogs).map((deviceId) => (
     <Card key={deviceId} className='mb-3'>
       <Card.Body>
-        <Card.Title>Device {deviceId}</Card.Title>
-        <Card.Subtitle className='mb-2 text-muted'>
-          IP Address: {latestLogs[deviceId].ipAddress}
-        </Card.Subtitle>
+        <Card.Title>Device {filteredLogs[deviceId].ipAddress}</Card.Title>
+        {/* <Card.Subtitle className='mb-2 text-muted'>
+          IP Address: {filteredLogs[deviceId].ipAddress}
+        </Card.Subtitle> */}
         <Card.Text>
-          Latest Log Data: {JSON.stringify(latestLogs[deviceId].logData)}
+          Latest Log Data: {JSON.stringify(filteredLogs[deviceId].logData)}
         </Card.Text>
         <Card.Text>
           Created At:{" "}
-          {latestLogs[deviceId].createdAt.format("MMMM DD, YYYY hh:mm A")}
+          {filteredLogs[deviceId].createdAt.format("MMMM DD, YYYY hh:mm A")}
         </Card.Text>
       </Card.Body>
     </Card>

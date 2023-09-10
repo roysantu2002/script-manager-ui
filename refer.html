@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Example</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>WebSocket Example</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="message-box" class="border p-3" style="height: 300px; overflow-y: scroll;"></div>
+                <input type="text" id="message-input" class="form-control mt-3" placeholder="Enter your message">
+                <button id="send-button" class="btn btn-primary mt-2">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap and JavaScript libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include Django Channels WebSocket consumer script -->
+    <script>
+        // Establish a WebSocket connection
+        const socket = new WebSocket("ws://your-websocket-endpoint/");
+
+        // When a connection is established
+        socket.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+
+        // When a message is received
+        socket.onmessage = (event) => {
+            const messageBox = document.getElementById("message-box");
+            messageBox.innerHTML += `<p>${event.data}</p>`;
+        };
+
+        // When an error occurs
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        // When the socket is closed
+        socket.onclose = (event) => {
+            if (event.wasClean) {
+                console.log(`WebSocket connection closed cleanly, code=${event.code}, reason=${event.reason}`);
+            } else {
+                console.error("WebSocket connection died");
+            }
+        };
+
+        // Send a message when the "Send" button is clicked
+        const sendButton = document.getElementById("send-button");
+        const messageInput = document.getElementById("message-input");
+
+        sendButton.addEventListener("click", () => {
+            const message = messageInput.value;
+            socket.send(message);
+            messageInput.value = "";
+        });
+    </script>
+</body>
+</html>
+
+
+------------
+
+# views.py
+from django.shortcuts import render
+
+def websocket_example(request):
+    return render(request, 'websocket_example.html')
+
+
+    -------------------
+
+
+    # urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('websocket_example/', views.websocket_example, name='websocket_example'),
+    # Add other URL patterns as needed
+]
+

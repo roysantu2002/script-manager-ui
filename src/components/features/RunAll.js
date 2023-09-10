@@ -9,6 +9,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { FaCircle } from 'react-icons/fa';
 import axiosInstance from '../../utils/axios';
 
+
 import lottie from "lottie-web"; // Import Lottie
 import animationData from "../../../public/wait.json"
 
@@ -23,7 +24,9 @@ const RunAll = () => {
 
   const [socket, setSocket] = useState(null); // Store the WebSocket instance here
   const [run, setRun] = useState(false); // Store the WebSocket instance here
-  const socketUrl = 'ws://192.168.1.103:8000/ws/scriptchat/run_script/';
+
+  const channelName = 'scripts'; // Replace with the actual channel nam
+  const socketUrl = `ws://localhost:8000/ws/netgeni/scripts/?channel=${channelName}`;
 
 
   useEffect(() => {
@@ -57,31 +60,47 @@ const RunAll = () => {
       });
   }, []);
 
-  const establishWebSocketConnection = (url, onMessageCallback) => {
-    const socket = new WebSocket(url);
-
-    socket.onopen = () => {
-      // WebSocket is open, you can send initial messages here if needed
-    };
-
-    socket.onmessage = (event) => {
-      const receivedData = event.data;
-      const parsedData = JSON.parse(receivedData);
-
-      if (parsedData) {
-        onMessageCallback(parsedData);
-      }
-    };
-
-    socket.onclose = (event) => {
-      // console.log('WebSocket connection closed:', event);
-    };
-
-    socket.onerror = (error) => {
-      // console.error('WebSocket error:', error);
-    };
-
-    return socket;
+  const establishWebSocketConnection = (onMessageCallback) => {
+    try {
+      const socket = new WebSocket(socketUrl); // Access the global 'url' variable
+  
+      // WebSocket open event
+      socket.addEventListener('open', (event) => {
+        console.log('WebSocket connection established:', event);
+      });
+  
+      // WebSocket error event
+      socket.addEventListener('error', (event) => {
+        console.error('WebSocket error:', event);
+  
+        // You can handle the error here, e.g., reconnect or display a message to the user.
+      });
+  
+      // WebSocket close event
+      socket.addEventListener('close', (event) => {
+        console.log('WebSocket connection closed:', event);
+  
+        // You can handle the close event here, e.g., attempt to reconnect.
+      });
+  
+      // WebSocket message event
+      socket.addEventListener('message', (event) => {
+        // console.log(message)
+        const receivedData = event.data;
+        const parsedData = JSON.parse(receivedData);
+  
+        if (parsedData) {
+          onMessageCallback(parsedData);
+        }
+      });
+  
+      return socket; // Return the WebSocket instance
+    } catch (error) {
+      console.error('Error establishing WebSocket connection:', error);
+  
+      // You can handle the error here, e.g., display an error message to the user.
+      return null; // Return null or another suitable value if an error occurs
+    }
   };
 
   useEffect(() => {
@@ -89,7 +108,7 @@ const RunAll = () => {
       /* your message data here */
     };
 
-    const newSocket = establishWebSocketConnection(socketUrl, (data) => {
+    const newSocket = establishWebSocketConnection((data) => {
       try {
   
 
@@ -501,7 +520,25 @@ const RunAll = () => {
               ))}
             </tbody>
           </table>
-          <div className="d-flex justify-content-center border-1 custom-round-button">
+
+          <div className="row justify-content-center">
+        <div className="col-md-8 text-center">
+          <button
+            className={`btn btn-success btn-lg rounded-circle ${
+              isRunning ? 'disabled' : ''
+            }`}
+            onClick={onRunButtonClick}
+          >
+            {isRunning ? (
+              <FontAwesomeIcon icon={faStop} />
+            ) : (
+              <FontAwesomeIcon icon={faPlay} />
+            )}
+          </button>
+        </div>
+        </div>
+
+          {/* <div className="d-flex justify-content-center border-1 custom-round-button"> */}
             {/* <button
               className={`btn action-button w-50 m-auto justify-content-center ${
                 selectedDevices.length === 0 ? "" : "text-success"
@@ -534,7 +571,7 @@ const RunAll = () => {
               )}
             </button> */}
 
-            {execution ? (
+            {/* {execution ? (
               <button
                 className="btn btn-sm custom-round-button"
                 onClick={() => handleStop()}
@@ -551,8 +588,8 @@ const RunAll = () => {
                 <FontAwesomeIcon icon={faPlay} />
                 <span> Run </span>
               </button>
-            )}
-          </div>
+            )} */}
+          {/* </div> */}
         </>
       )}
 

@@ -101,8 +101,8 @@ const Sidebar = ({ handleSidebarToggle, sidebarMenuActive }) => {
 
       <ul className={styles["sidebar-footer"]}>
         <li className={styles["footer-item"]}>
-              <button className='btn btn-outline-danger' onClick={handleLogout}>
-                <FaSignInAlt size={20} />
+              <button className='btn btn-outline-danger bg-white' onClick={handleLogout}>
+                <FaSignInAlt size={20} className='text-danger'/>
        
               <span className='text-danger'> LOGOUT</span>
             </button>

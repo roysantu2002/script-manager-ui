@@ -31,40 +31,42 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Monthly Execution',
+      text: 'Monthly CPU Usage by IP Address',
     },
   },
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
+const generateRandomData = () => {
+  return labels.map(() => faker.datatype.number({ min: 0, max: 100 }));
+};
+
 export const data = {
   labels,
   datasets: [
     {
-      label: 'Failed',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(255, 0, 0, 0.5)', // Red color
+      label: 'IP Address 1',
+      data: generateRandomData(),
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
     },
     {
-      label: 'Passed',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(0, 128, 0, 0.5)', // Green color
+      label: 'IP Address 2',
+      data: generateRandomData(),
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
     },
+    // Add more IP addresses and data as needed
   ],
 };
 
-const PassedFailed = () => {
-
-    return (
-        <Card >
-        <Card.Body>
+const MonthlyCPUUsage = () => {
+  return (
+    <Card>
+      <Card.Body>
         <Bar options={options} data={data} />
-        </Card.Body>
-        </Card>
+      </Card.Body>
+    </Card>
+  );
+};
 
-
-    )
-}
-
-export default PassedFailed;
+export default MonthlyCPUUsage;

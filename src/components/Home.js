@@ -77,8 +77,8 @@ const HomePage = () => {
                <h1>Bob, a network engineer</h1>
      <div className="avatar avatar-lg mb-3">
          <Image
-           src="/images/main1.jpg" // Replace with the path to your image
-           alt="Image Alt Text"
+           src="/images/1.jpg" // Replace with the path to your image
+           alt="Bob"
            width={300} // Set the desired width
           height={300} // Set the desired height
           className="rounded-circle"
@@ -91,7 +91,7 @@ const HomePage = () => {
              <div className="d-flex justify-content-center">
   <div className="w-100">
     <Image
-      src="/images/home1.png" // Replace with the path to your image
+      src="/images/4.jpg" // Replace with the path to your image
       alt="Image Alt Text"
       layout="responsive" // Use layout="responsive" for full-width images
       width={400} // Set the desired width (you can adjust this if needed)

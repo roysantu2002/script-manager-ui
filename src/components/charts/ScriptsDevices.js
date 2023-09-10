@@ -42,12 +42,12 @@ export const data = {
     {
       label: 'Devices',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      backgroundColor: 'rgba(0, 0, 255, 0.5)', // Blue color
     },
     {
       label: 'Scripts',
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      backgroundColor: 'rgba(75, 192, 192, 0.5)', // Teal color
     },
   ],
 };
