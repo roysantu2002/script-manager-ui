@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaEdit, FaTrash, FaCheck } from 'react-icons/fa';
 
 
 const audits = [
@@ -51,37 +52,54 @@ const audits = [
     }
   ]
 
-const Audit = () => {
-  return (
-    <div className="container">
-
-    <div className="row">
-      {audits.map((audit) => (
-        <div className="col-md-4 mb-3" key={audit.id}>
-          <div className={`card`}>
-            <div className="card-body">
-              <h5 className="card-title">{audit.action} - {audit.scriptName}</h5>
-              <p className="card-text">Device Type: {audit.deviceType}</p>
-              <p className="card-text">IP Address: {audit.ipAddress}</p>
-              <p className="card-text">Execution Date: {audit.executionDateTime}</p>
-              <p className="card-text">Status: {audit.executionStatus}</p>
-              <p className="card-text">Duration: {audit.duration}</p>
-              <p className="card-text">Log Output: {audit.logOutput}</p>
-              {/* Add buttons/icons for actions */}
-              <div className="mt-2 d-flex justify-content-between">
-                  <button className="btn btn-primary btn-sm mr-2 ml-2">Edit</button>
-                  <button className="btn btn-danger btn-sm mr-2 ml-2">Delete</button>
-                  {audit.action === 'Approve' && (
-                    <button className="btn btn-success btn-sm">Approve</button>
-                  )}
-                </div>
-                </div>
+  
+  const AuditCard = ({ audit }) => {
+    return (
+      <div className="col-md-4 mb-3">
+        <div className="card">
+          <div className="card-body">
+            <h5 className="card-title">
+              {audit.action} - {audit.scriptName}
+            </h5>
+            <p className="card-text">Device Type: {audit.deviceType}</p>
+            <p className="card-text">IP Address: {audit.ipAddress}</p>
+            <p className="card-text">Execution Date: {audit.executionDateTime}</p>
+            <p className="card-text">Status: {audit.executionStatus}</p>
+            <p className="card-text">Duration: {audit.duration}</p>
+            <p className="card-text">Log Output: {audit.logOutput}</p>
+            {/* Add buttons/icons for actions */}
+            <div className="mt-2 d-flex justify-content-between">
+              <button className="btn btn-primary btn-sm mr-2 ml-2">
+                <FaEdit className="mr-1" />
+                Edit
+              </button>
+              <button className="btn btn-danger btn-sm mr-2 ml-2">
+                <FaTrash className="mr-1" />
+                Delete
+              </button>
+              {audit.action === 'Approve' && (
+                <button className="btn btn-success btn-sm">
+                  <FaCheck className="mr-1" />
+                  Approve
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-  );
-};
-
-export default Audit;
+      </div>
+    );
+  };
+  
+  const AuditsList = () => {
+    return (
+      <div className="container">
+        <div className="row">
+          {audits.map((audit) => (
+            <AuditCard key={audit.id} audit={audit} />
+          ))}
+        </div>
+      </div>
+    );
+  };
+  
+  export default AuditsList;

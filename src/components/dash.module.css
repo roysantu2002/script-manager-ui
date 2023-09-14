@@ -1,4 +1,7 @@
 /* Component.module.css */
+.navbarContainer {
+  display: flex;
+}
 
 /* Component container */
 .container {

@@ -20,6 +20,7 @@ const RunAll = () => {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [execution, setExecution] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const animationContainerRef = useRef(null);
 
   const [socket, setSocket] = useState(null); // Store the WebSocket instance here
@@ -319,7 +320,7 @@ const RunAll = () => {
   //   }
   // };
 
-  const handleAction = () => {
+  const onRunButtonClick = () => {
     setMessages([]);
     // console.log("setting run")
     // setRun(true);
@@ -528,6 +529,7 @@ const RunAll = () => {
               isRunning ? 'disabled' : ''
             }`}
             onClick={onRunButtonClick}
+            disabled={!socket}
           >
             {isRunning ? (
               <FontAwesomeIcon icon={faStop} />

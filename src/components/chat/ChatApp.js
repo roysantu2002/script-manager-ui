@@ -28,7 +28,7 @@ Whether you need to automate tasks, troubleshoot networking issues, or learn Pyt
 // };
 
 
-const ChatWindow = ({ messages, typingText, chatWindowRef }) => {
+const ChatWindow = ({ messages, chatWindowRef }) => {
   // Function to scroll the chat window to the bottom
   const scrollToBottom = () => {
     if (chatWindowRef.current) {
@@ -90,9 +90,9 @@ const ChatWindow = ({ messages, typingText, chatWindowRef }) => {
     </div>
   );
 })}
-          {typingText && (
+          {/* {typingText && (
             <div className="message typing-message text-white">{typingText}</div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
