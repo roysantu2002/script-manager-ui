@@ -1,48 +1,48 @@
 // components/ScriptCard.js
 import React from 'react';
-import axiosInstance from "../../utils/axios";
-import { useEffect, useState } from "react";
+import axiosInstance from '../../utils/axios';
+import { useEffect, useState } from 'react';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa'; // Import the icons you want to use
 
 const ScriptCard = ({ script }) => {
-    const [scripts, setScripts] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [scripts, setScripts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-        setLoading(true);
-        axiosInstance
-          .get("/scripts/script-list/")
-          .then((response) => {
-            // Assuming the response data is an array of devices
-            setScripts(response.data);
-            setLoading(false);
-          })
-    
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
-      }, []);
+  useEffect(() => {
+    setLoading(true);
+    axiosInstance
+      .get('/scripts/script-list/')
+      .then((response) => {
+        // Assuming the response data is an array of devices
+        setScripts(response.data);
+        setLoading(false);
+      })
 
-//   logs.forEach((log) => {
-//     const deviceId = log.device_id;
-//     const createdAt = moment(log.created_at);
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
-//     if (
-//       !latestLogs[deviceId] ||
-//       createdAt.isAfter(latestLogs[deviceId].createdAt)
-//     ) {
-//       latestLogs[deviceId] = {
-//         createdAt,
-//         logData: log.log_data,
-//         ipAddress: log.ip_address,
-//       };
-//     }
-//   });
+  //   logs.forEach((log) => {
+  //     const deviceId = log.device_id;
+  //     const createdAt = moment(log.created_at);
 
-const ScriptCard = ({ script }) => {
-    const isActive = script.status === 'active';
+  //     if (
+  //       !latestLogs[deviceId] ||
+  //       createdAt.isAfter(latestLogs[deviceId].createdAt)
+  //     ) {
+  //       latestLogs[deviceId] = {
+  //         createdAt,
+  //         logData: log.log_data,
+  //         ipAddress: log.ip_address,
+  //       };
+  //     }
+  //   });
+
+  const ScriptCard = ({ script }) => {
+    const isActive = script.status;
     return (
-      <div className="card mb-4">
+      <div className="card mb-4 p-3">
         <div className="card-body">
           <h5 className="card-title">{script.name}</h5>
           <p className="card-text">{script.description}</p>
@@ -57,23 +57,26 @@ const ScriptCard = ({ script }) => {
               <strong>Execution Frequency:</strong> {script.execution_frequency}
             </li>
             <li className="list-group-item">
-            <strong>Status:</strong> {isActive ? <FaCheckCircle className="text-success" /> : <FaTimesCircle className="text-danger" />}
-          </li>
+              <strong>Status:</strong>{' '}
+              {isActive ? (
+                <FaCheckCircle className="text-success" />
+              ) : (
+                <FaTimesCircle className="text-danger" />
+              )}
+            </li>
           </ul>
         </div>
       </div>
     );
   };
 
-  
-   return (
+  return (
     <div className="container">
-   
       {loading ? (
         // Show the Bootstrap spinner while loading
-        <div className='d-flex justify-content-center'>
-          <div className='spinner-border' role='status'>
-            <span className='visually-hidden'>Loading...</span>
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
@@ -88,6 +91,5 @@ const ScriptCard = ({ script }) => {
     </div>
   );
 };
-
 
 export default ScriptCard;

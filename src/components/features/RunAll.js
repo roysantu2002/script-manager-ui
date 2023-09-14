@@ -5,13 +5,12 @@ import {
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 import axiosInstance from '../../utils/axios';
 
-
-import lottie from "lottie-web"; // Import Lottie
-import animationData from "../../../public/wait.json"
+import lottie from 'lottie-web'; // Import Lottie
+import animationData from '../../../public/wait.json';
 
 const RunAll = () => {
   const [deviceList, setDeviceList] = useState([]);
@@ -29,11 +28,10 @@ const RunAll = () => {
   const channelName = 'scripts'; // Replace with the actual channel nam
   const socketUrl = `ws://localhost:8000/ws/netgeni/scripts/?channel=${channelName}`;
 
-
   useEffect(() => {
     const animation = lottie.loadAnimation({
       container: animationContainerRef.current,
-      renderer: "svg", // or "canvas" or "html"
+      renderer: 'svg', // or "canvas" or "html"
       loop: true,
       autoplay: true, // Automatically play the animation when the modal opens
       animationData: animationData, // Replace with your animation JSON data
@@ -43,8 +41,6 @@ const RunAll = () => {
       animation.destroy();
     };
   }, []); // Re-run the effect when the modal is shown or hidden
-
-
 
   useEffect(() => {
     setLoading(true);
@@ -64,41 +60,41 @@ const RunAll = () => {
   const establishWebSocketConnection = (onMessageCallback) => {
     try {
       const socket = new WebSocket(socketUrl); // Access the global 'url' variable
-  
+
       // WebSocket open event
       socket.addEventListener('open', (event) => {
         console.log('WebSocket connection established:', event);
       });
-  
+
       // WebSocket error event
       socket.addEventListener('error', (event) => {
         console.error('WebSocket error:', event);
-  
+
         // You can handle the error here, e.g., reconnect or display a message to the user.
       });
-  
+
       // WebSocket close event
       socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event);
-  
+
         // You can handle the close event here, e.g., attempt to reconnect.
       });
-  
+
       // WebSocket message event
       socket.addEventListener('message', (event) => {
         // console.log(message)
         const receivedData = event.data;
         const parsedData = JSON.parse(receivedData);
-  
+
         if (parsedData) {
           onMessageCallback(parsedData);
         }
       });
-  
+
       return socket; // Return the WebSocket instance
     } catch (error) {
       console.error('Error establishing WebSocket connection:', error);
-  
+
       // You can handle the error here, e.g., display an error message to the user.
       return null; // Return null or another suitable value if an error occurs
     }
@@ -111,8 +107,6 @@ const RunAll = () => {
 
     const newSocket = establishWebSocketConnection((data) => {
       try {
-  
-
         // const receivedData = data;
         // const parsedData = JSON.parse(receivedData);
 
@@ -139,25 +133,25 @@ const RunAll = () => {
         // console.log(str_message);
 
         //complted received
-        if (str_message.includes("alldone")) {
-
+        if (str_message.includes('alldone')) {
           console.log('Received message:', str_message);
+          setIsRunning(false);
 
           const stopMessage = {
-            message: "stop",
+            message: 'stop',
           };
-        if (socket && socket.readyState === WebSocket.OPEN) {
-          socket.send(JSON.stringify(stopMessage));
-          // Rest of your code
-        } else {
-          console.error('WebSocket is not open or does not exist.');
-        }
-          setExecution(false);
-          setSocket(null)
-          if (socket) {
-              socket.close();
+          if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(stopMessage));
+            // Rest of your code
+          } else {
+            console.error('WebSocket is not open or does not exist.');
           }
-      } 
+          setExecution(false);
+          setSocket(null);
+          if (socket) {
+            socket.close();
+          }
+        }
 
         // // Split the received message by ', ' to extract components
         const components = str_message.split(', ');
@@ -229,7 +223,7 @@ const RunAll = () => {
   //   setExecution(!allDone);
   // }, [messages]);
 
-  //stop the execution 
+  //stop the execution
 
   // useEffect(() => {
   //   // Check if messages is empty; if so, return early without further execution
@@ -237,34 +231,30 @@ const RunAll = () => {
   //   if (messages.length === 0) {
   //     return;
   //   }
-  
+
   //   // ... (your other code)
-  
+
   //   // Filter messages that have "done" status
   //   const doneMessages = messages.filter(
   //     (messageData) => messageData.status === 'done'
   //   );
-  
+
   //   // Check if the count of selected devices matches the count of "done" messages,
   //   // or use the length of deviceList if selectedDevices is empty
   //   const allDone = selectedDevices.length === 0
   //     ? doneMessages.length === deviceList.length
   //     : doneMessages.length === selectedDevices.length;
-  
+
   //   // Set setExecution to false if counts match
   //   setExecution(!allDone);
   // }, [messages, selectedDevices, deviceList]);
 
-
-
   const handleCheckboxChange = (device) => {
     const { id, ip_address } = device; // Extract the id and ip_address properties
-  
+
     if (selectedDevices.find((selectedDevice) => selectedDevice.id === id)) {
       setSelectedDevices(
-        selectedDevices.filter(
-          (selectedDevice) => selectedDevice.id !== id,
-        ),
+        selectedDevices.filter((selectedDevice) => selectedDevice.id !== id),
       );
     } else {
       setSelectedDevices([...selectedDevices, { id, ip_address }]);
@@ -321,6 +311,7 @@ const RunAll = () => {
   // };
 
   const onRunButtonClick = () => {
+    setIsRunning(true);
     setMessages([]);
     // console.log("setting run")
     // setRun(true);
@@ -328,10 +319,11 @@ const RunAll = () => {
     sendWebSocketMessage('run');
   };
 
-  const handleStop = () => {
+  const onStopClick = () => {
+    setIsRunning(false);
     sendWebSocketMessage('stop');
-    setSelectedDevices([])
-    setSocket(null)
+    setSelectedDevices([]);
+    setSocket(null);
     setLoading(false);
     setExecution(false);
     setMessages([]);
@@ -351,20 +343,20 @@ const RunAll = () => {
 
   // Now, you can use the 'socket' variable in your 'sendWebSocketMessage' function
   const sendWebSocketMessage = (messageText) => {
-
     // const newSocket = establishWebSocketConnection(socketUrl, (data) => {
 
-    console.log(messageText)
+    console.log(messageText);
     setExecution(true);
     // console.log(messageText);
 
-    const activeDeviceList = deviceList.filter(device => device.status === true);
+    const activeDeviceList = deviceList.filter(
+      (device) => device.status === true,
+    );
 
     // Extract the IP addresses from the filtered activeDeviceList
-    const activeDeviceIPs = activeDeviceList.map(device => device.ip_address);
+    const activeDeviceIPs = activeDeviceList.map((device) => device.ip_address);
 
     // console.log(activeDeviceIPs)
-
 
     const message = {
       message: selectedDevices.length > 0 ? selectedDevices : activeDeviceIPs,
@@ -374,29 +366,28 @@ const RunAll = () => {
     //   const message = {
     //     message: messageText,
     //   };
-     
+
     // }
 
-  
     // const message = {
     //   message: selectedDevices.length > 0 ? selectedDevices : deviceList,
     // };
     if (socket && socket.readyState === WebSocket.OPEN) {
       try {
-          if (messageText === 'stop') {
-              const stopMessage = {
-                  message: messageText,
-              };
-              console.log(stopMessage)
-              socket.send(JSON.stringify(stopMessage)); // Send 'stop' message
-          } else {
-              socket.send(JSON.stringify(message)); // Send 'message' based on conditions
-          }
+        if (messageText === 'stop') {
+          const stopMessage = {
+            message: messageText,
+          };
+          console.log(stopMessage);
+          socket.send(JSON.stringify(stopMessage)); // Send 'stop' message
+        } else {
+          socket.send(JSON.stringify(message)); // Send 'message' based on conditions
+        }
       } catch (error) {
-          console.error('Error sending message:', error);
+        console.error('Error sending message:', error);
       }
-  }
-}
+    }
+  };
 
   // const sendWebSocketMessage = (messageText) => {
   //   setExecution(true);
@@ -464,7 +455,6 @@ const RunAll = () => {
   //   }
   // };
 
-
   return (
     <div className="table-responsive">
       {loading ? (
@@ -523,25 +513,25 @@ const RunAll = () => {
           </table>
 
           <div className="row justify-content-center">
-        <div className="col-md-8 text-center">
-          <button
-            className={`btn btn-success btn-lg rounded-circle ${
-              isRunning ? 'disabled' : ''
-            }`}
-            onClick={onRunButtonClick}
-            disabled={!socket}
-          >
-            {isRunning ? (
-              <FontAwesomeIcon icon={faStop} />
-            ) : (
-              <FontAwesomeIcon icon={faPlay} />
-            )}
-          </button>
-        </div>
-        </div>
+            <div className="col-md-8 text-center">
+              <button
+                className={`btn btn-${
+                  isRunning ? 'danger' : 'success'
+                } btn-lg rounded-circle}`}
+                onClick={isRunning ? onStopClick : onRunButtonClick} // Conditionally assign the onClick function
+                disabled={!socket}
+              >
+                {isRunning ? (
+                  <FontAwesomeIcon icon={faStop} />
+                ) : (
+                  <FontAwesomeIcon icon={faPlay} />
+                )}
+              </button>
+            </div>
+          </div>
 
           {/* <div className="d-flex justify-content-center border-1 custom-round-button"> */}
-            {/* <button
+          {/* <button
               className={`btn action-button w-50 m-auto justify-content-center ${
                 selectedDevices.length === 0 ? "" : "text-success"
               }`}
@@ -554,7 +544,7 @@ const RunAll = () => {
           
             </button> */}
 
-            {/* <button
+          {/* <button
               className={`btn action-button w-50 m-auto justify-content-center ${
                 selectedDevices.length === 0 ? "" : "text-success"
               }`}
@@ -573,7 +563,7 @@ const RunAll = () => {
               )}
             </button> */}
 
-            {/* {execution ? (
+          {/* {execution ? (
               <button
                 className="btn btn-sm custom-round-button"
                 onClick={() => handleStop()}
@@ -624,8 +614,8 @@ const RunAll = () => {
                       </span>
                     ) : (
                       <span className="text-success">
-                      <FontAwesomeIcon icon={faCheckCircle} /> 
-                    </span>
+                        <FontAwesomeIcon icon={faCheckCircle} />
+                      </span>
                     )}
                   </td>
                   <td>{messageData.scriptName}</td>
@@ -641,9 +631,9 @@ const RunAll = () => {
           </table>
         ) : (
           <div
-          ref={animationContainerRef}
-          style={{ width: "100%", height: "300px" }} // Adjust the dimensions as needed
-        />
+            ref={animationContainerRef}
+            style={{ width: '100%', height: '300px' }} // Adjust the dimensions as needed
+          />
         )}
       </>
     </div>
